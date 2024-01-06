@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -68,8 +68,8 @@ public class ItemsController {
     }
 
     @PostMapping("/add")
-    public String processItem(@Valid Item addingItem, BindingResult result) {
-        if (result.hasErrors()) {
+    public String processItem(@Valid Item addingItem, Errors errors) {
+        if (errors.hasErrors()) {
             return "addItem";
         }
 

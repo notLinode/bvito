@@ -12,7 +12,6 @@ practice various aspects of Spring development.
   - ~~`/items/{id}` Individual listing pages~~
 - `/profile` Personal account to display and
 configure own listings
-  - `/registration`, `/login`
-    - User database entity
-      - Connect user entity with item entity
-    - Spring security configuration
+  - ~~`/registration`, `/login`~~
+    - ~~User database entity~~
+    - ~~Spring security configuration~~
