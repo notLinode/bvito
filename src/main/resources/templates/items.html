@@ -16,6 +16,7 @@
         <p th:text="${item.name}" />
         <p th:text="${item.description}" />
         <p th:text="${item.price}" />
+        <span th:each="tag : ${item.tags}" th:text="${tag.name}" style="padding-right: 10px"></span>
         <br>
     </div>
 </body>
