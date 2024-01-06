@@ -9,6 +9,7 @@ practice various aspects of Spring development.
   - ~~Listing database entity~~
   - ~~Listing tags~~
   - ~~`/items/add` Ability to list a new item~~
+  - ~~`/items/{id}` Individual listing pages~~
 - `/profile` Personal account to display and
 configure own listings
   - `/registration`, `/login`

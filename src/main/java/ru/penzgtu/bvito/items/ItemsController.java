@@ -5,13 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -45,23 +43,27 @@ public class ItemsController {
         model.addAttribute("items", items);
     }
 
-    @ModelAttribute(name = "tags")
-    public Iterable<ItemTag> addTagsToModel() {
-        return tagRepo.findAll();
-    }
-
-    @ModelAttribute(name = "addingItem")
-    public Item addItemToModel() {
-        return new Item();
-    }
-
     @GetMapping
-    public String getItemsPage() {
-        return "items";
+    public String getAllItemsPage() {
+        return "allItems";
+    }
+
+    @GetMapping("/{id}")
+    public String getItemPage(@PathVariable String id, Model model) {
+        Optional<Item> optionalItem = itemsRepo.findById(Long.valueOf(id));
+
+        if (optionalItem.isPresent()) {
+            model.addAttribute("item", optionalItem.get());
+            return "item";
+        }
+
+        return "itemNotFound";
     }
 
     @GetMapping("/add")
-    public String getAddItemForm() {
+    public String getAddItemForm(Model model) {
+        model.addAttribute("addingItem", new Item());
+        model.addAttribute("tags", tagRepo.findAll());
         return "addItem";
     }
 
@@ -72,9 +74,9 @@ public class ItemsController {
         }
 
         addingItem.setCreatedAt(new Date());
-        itemsRepo.save(addingItem);
+        Item savedItem = itemsRepo.save(addingItem);
 
-        return "redirect:/";
+        return "redirect:/items/" + savedItem.getId();
     }
 
 }

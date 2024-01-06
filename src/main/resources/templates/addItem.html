@@ -5,12 +5,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Bvito Add Listing</title>
+    <title>Bvito Добавить объявление</title>
     <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 
 <body>
-    <h1>Add a Listing</h1>
+    <h1>Добавьте объявление</h1>
 
     <form method="POST" th:action="@{/items/add}" th:object="${addingItem}">
         <label for="name">Название объявления: </label>
@@ -32,7 +32,6 @@
         <div th:each="tag : ${tags}">
             <input type="checkbox" th:text="${tag.name}" th:field="*{tags}" th:value="${tag.id}">
         </div>
-        <br>
         <br>
 
         <input type="submit" value="Разместить объявление">

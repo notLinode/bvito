@@ -5,12 +5,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Bvito Listings</title>
+    <title>Bvito Объявления</title>
     <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 
 <body>
-    <h1>Listings</h1>
+    <h1>Объявления</h1>
 
     <div th:each="item : ${items}">
         <p th:text="${item.name}" />
