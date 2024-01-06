@@ -19,10 +19,10 @@ public class BvitoApplication {
     @Bean
     public CommandLineRunner dataLoader(ItemTagRepository repo) {
         return args -> {
-            repo.save(new ItemTag("Транспорт"));
-            repo.save(new ItemTag("Услуга"));
-            repo.save(new ItemTag("Травел"));
-            repo.save(new ItemTag("Тэг1"));
+            repo.save(ItemTag.builder().name("Транспорт").build());
+            repo.save(ItemTag.builder().name("Услуга").build());
+            repo.save(ItemTag.builder().name("Травел").build());
+            repo.save(ItemTag.builder().name("Техника").build());
         };
     }
 
