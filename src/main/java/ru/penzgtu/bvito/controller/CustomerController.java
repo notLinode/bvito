@@ -7,8 +7,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.penzgtu.bvito.dto.CustomerDto;
 import ru.penzgtu.bvito.repository.CustomerRepository;
-import ru.penzgtu.bvito.dto.RegistrationForm;
 
 @Controller
 @RequestMapping("/profile")
@@ -33,7 +33,7 @@ public class CustomerController {
     }
 
     @PostMapping("/register")
-    public String processRegistration(@Valid RegistrationForm form, Errors errors) {
+    public String processRegistration(@Valid CustomerDto form, Errors errors) {
         if (errors.hasErrors()) {
             return "registration";
         }

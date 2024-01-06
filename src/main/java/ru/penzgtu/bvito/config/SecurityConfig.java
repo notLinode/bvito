@@ -12,6 +12,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import ru.penzgtu.bvito.model.Customer;
 import ru.penzgtu.bvito.repository.CustomerRepository;
 
+import java.util.Optional;
+
 @Configuration
 public class SecurityConfig {
 
@@ -23,9 +25,9 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(CustomerRepository customerRepo) {
         return username -> {
-            Customer customer = customerRepo.findByUsername(username);
-            if (customer != null) {
-                return customer;
+            Optional<Customer> customer = customerRepo.findByUsername(username);
+            if (customer.isPresent()) {
+                return customer.get();
             }
 
             throw new UsernameNotFoundException("Пользователь \"" + username + "\" не найден");

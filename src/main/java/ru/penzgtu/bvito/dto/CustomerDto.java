@@ -6,14 +6,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.penzgtu.bvito.model.Customer;
 
 @Data
-public class RegistrationForm {
+public class CustomerDto {
 
     @NotBlank
     private String username;
     @NotBlank
     private String password;
-    @NotBlank
-    private String confirm;
     @NotBlank
     private String fullName;
     @NotBlank
