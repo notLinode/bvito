@@ -1,8 +1,9 @@
-package ru.penzgtu.bvito.customer;
+package ru.penzgtu.bvito.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.penzgtu.bvito.model.Customer;
 
 @Data
 public class RegistrationForm {

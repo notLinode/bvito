@@ -1,4 +1,4 @@
-package ru.penzgtu.bvito.items;
+package ru.penzgtu.bvito.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -6,6 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import ru.penzgtu.bvito.repository.ItemTagRepository;
+import ru.penzgtu.bvito.repository.ItemsRepository;
+import ru.penzgtu.bvito.model.Item;
 
 import java.math.BigDecimal;
 import java.util.Date;

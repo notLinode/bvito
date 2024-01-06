@@ -1,4 +1,4 @@
-package ru.penzgtu.bvito.items;
+package ru.penzgtu.bvito.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
