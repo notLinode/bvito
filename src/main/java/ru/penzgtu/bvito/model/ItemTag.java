@@ -1,9 +1,7 @@
 package ru.penzgtu.bvito.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,10 +15,6 @@ import lombok.NoArgsConstructor;
 public class ItemTag {
 
     @Id
-    @GeneratedValue
-    private long id;
-
-    @NotBlank
     private String name;
 
 }

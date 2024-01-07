@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import ru.penzgtu.bvito.repository.ItemTagRepository;
-import ru.penzgtu.bvito.repository.ItemsRepository;
+import ru.penzgtu.bvito.repository.ItemRepository;
 import ru.penzgtu.bvito.model.Item;
 
 import java.math.BigDecimal;
@@ -19,10 +19,10 @@ import java.util.Optional;
 @RequestMapping("/items")
 public class ItemsController {
 
-    private final ItemsRepository itemsRepo;
+    private final ItemRepository itemsRepo;
     private final ItemTagRepository tagRepo;
 
-    public ItemsController(ItemsRepository itemsRepo, ItemTagRepository tagRepo) {
+    public ItemsController(ItemRepository itemsRepo, ItemTagRepository tagRepo) {
         this.itemsRepo = itemsRepo;
         this.tagRepo = tagRepo;
     }
