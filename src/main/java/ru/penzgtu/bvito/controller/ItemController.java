@@ -30,6 +30,14 @@ public class ItemController {
         return ResponseEntity.ok(itemService.getItemById(id));
     }
 
+    @GetMapping("/item/listed-by/{id}")
+    public ResponseEntity<ItemResponse> itemsByOneCustomer(
+            @RequestParam(value = "pageNum", defaultValue = "0", required = false) int pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @PathVariable long id) {
+        return ResponseEntity.ok(itemService.getAllItemsByCustomerId(pageNum, pageSize, id));
+    }
+
     @PostMapping("/item/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto itemDto) {

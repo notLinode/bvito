@@ -7,8 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.penzgtu.bvito.dto.ItemDto;
 import ru.penzgtu.bvito.dto.ItemResponse;
+import ru.penzgtu.bvito.model.Customer;
 import ru.penzgtu.bvito.model.Item;
 import ru.penzgtu.bvito.model.ItemTag;
+import ru.penzgtu.bvito.repository.CustomerRepository;
 import ru.penzgtu.bvito.repository.ItemRepository;
 import ru.penzgtu.bvito.repository.ItemTagRepository;
 import ru.penzgtu.bvito.service.ItemService;
@@ -20,10 +22,12 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepo;
     private final ItemTagRepository tagRepo;
+    private final CustomerRepository customerRepo;
 
-    public ItemServiceImpl(ItemRepository itemRepo, ItemTagRepository tagRepo) {
+    public ItemServiceImpl(ItemRepository itemRepo, ItemTagRepository tagRepo, CustomerRepository customerRepo) {
         this.itemRepo = itemRepo;
         this.tagRepo = tagRepo;
+        this.customerRepo = customerRepo;
     }
 
     @Override
@@ -60,13 +64,30 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItemById(long id) {
-        Item item = itemRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Pokemon could not be found"));
+        Item item = itemRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Item could not be found"));
         return mapToDto(item);
     }
 
     @Override
+    public ItemResponse getAllItemsByCustomerId(int pageNum, int pageSize, Long customerId) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<Item> items = itemRepo.getAllByListedBy_Id(customerId, pageable);
+        List<Item> itemList = items.getContent();
+        List<ItemDto> content = itemList.stream().map(this::mapToDto).toList();
+
+        return ItemResponse.builder()
+                .content(content)
+                .pageNum(items.getNumber())
+                .pageSize(items.getSize())
+                .totalElements(items.getTotalElements())
+                .totalPages(items.getTotalPages())
+                .last(items.isLast())
+                .build();
+    }
+
+    @Override
     public ItemDto updateItem(ItemDto newItemDto, long id) {
-        Item item = itemRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Pokemon could not be found"));
+        Item item = itemRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Item could not be found"));
 
         item.setCreatedAt(newItemDto.getCreatedAt());
         item.setName(newItemDto.getName());

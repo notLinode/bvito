@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.penzgtu.bvito.dto.ItemDto;
+import ru.penzgtu.bvito.dto.ItemResponse;
 import ru.penzgtu.bvito.model.Item;
 import ru.penzgtu.bvito.model.ItemTag;
 import ru.penzgtu.bvito.service.ItemService;
@@ -25,8 +26,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @WebMvcTest(controllers = ItemController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -62,22 +62,28 @@ public class ItemControllerTests {
                 .build();
     }
 
-    @Test
-    public void ItemController_GetItems_ReturnCreated() throws Exception {
-        BDDMockito.given(service.createItem(ArgumentMatchers.any()))
-                .willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+    @Test public void ItemController_GetItems_ReturnResponseDto() throws Exception {
+        ItemResponse responseDto = ItemResponse.builder()
+                .content(List.of(itemDto))
+                .pageNum(1)
+                .pageSize(10)
+                .totalElements(1L)
+                .totalPages(1)
+                .last(true)
+                .build();
+
+        BDDMockito.when(service.getAllItems(1, 10))
+                .thenReturn(responseDto);
 
         ResultActions response = mockMvc.perform(
-                post("/api/item/create")
+                get("/api/item")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(itemDto))
+                        .param("pageNum","1")
+                        .param("pageSize", "10")
         );
 
-        response.andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(itemDto.getName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(itemDto.getDescription())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.price", CoreMatchers.is(itemDto.getPrice().intValue()))) // JsonSmartJsonProvider настолько умный, что при десериализации BigDecimal даёт переменной тип int
-                .andExpect(MockMvcResultMatchers.jsonPath("$.tags", CoreMatchers.is(itemDto.getTags())));
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.size()", CoreMatchers.is(responseDto.getContent().size())));
     }
 
     @Test
@@ -97,5 +103,71 @@ public class ItemControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.price", CoreMatchers.is(itemDto.getPrice().intValue())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.tags", CoreMatchers.is(itemDto.getTags())));
     }
+
+    @Test
+    public void ItemController_ItemsByOneCustomer_ReturnCreated() throws Exception {
+        long customerId = 1L;
+
+        ItemResponse responseDto = ItemResponse.builder()
+                .content(List.of(itemDto))
+                .pageNum(1)
+                .pageSize(10)
+                .totalElements(1L)
+                .totalPages(1)
+                .last(true)
+                .build();
+
+        BDDMockito.when(service.getAllItemsByCustomerId(1, 10, customerId))
+                .thenReturn(responseDto);
+
+        ResultActions response = mockMvc.perform(
+                get("/api/item/listed-by/" + customerId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("pageNum","1")
+                        .param("pageSize", "10")
+        );
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.size()", CoreMatchers.is(responseDto.getContent().size())));
+    }
+
+    @Test
+    public void ItemController_CreateItem_ReturnCreated() throws Exception {
+        BDDMockito.given(service.createItem(ArgumentMatchers.any()))
+                .willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+
+        ResultActions response = mockMvc.perform(
+                post("/api/item/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(itemDto))
+        );
+
+        response.andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(itemDto.getName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(itemDto.getDescription())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.price", CoreMatchers.is(itemDto.getPrice().intValue()))) // JsonSmartJsonProvider настолько умный, что при десериализации BigDecimal даёт переменной тип int
+                .andExpect(MockMvcResultMatchers.jsonPath("$.tags", CoreMatchers.is(itemDto.getTags())));
+    }
+
+    @Test
+    public void ItemController_UpdateItem_ReturnItemDto() throws Exception {
+        long itemId = 1L;
+
+        BDDMockito.when(service.updateItem(itemDto, itemId)).thenReturn(itemDto);
+
+        ResultActions response = mockMvc.perform(
+                put("/api/item/" + itemId + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(itemDto))
+        );
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", CoreMatchers.is(itemDto.getName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(itemDto.getDescription())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.price", CoreMatchers.is(itemDto.getPrice().intValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.tags", CoreMatchers.is(itemDto.getTags())));
+    }
+
+    // лень тестить deleteItem()
 
 }
