@@ -2,6 +2,9 @@ package ru.penzgtu.bvito.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,8 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.penzgtu.bvito.model.Customer;
-import ru.penzgtu.bvito.repository.CustomerRepository;
+import ru.penzgtu.bvito.model.UserEntity;
+import ru.penzgtu.bvito.repository.UserRepository;
 
 import java.util.Optional;
 
@@ -18,16 +21,28 @@ import java.util.Optional;
 public class SecurityConfig {
 
     @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .build();
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(CustomerRepository customerRepo) {
+    public UserDetailsService userDetailsService(UserRepository customerRepo) {
         return username -> {
-            Optional<Customer> customer = customerRepo.findByUsername(username);
-            if (customer.isPresent()) {
-                return customer.get();
+            Optional<UserEntity> user = customerRepo.findByUsername(username);
+            if (user.isPresent()) {
+                return user.get();
             }
 
             throw new UsernameNotFoundException("Пользователь \"" + username + "\" не найден");
@@ -35,18 +50,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/items/add").hasRole("USER")
-                        .requestMatchers("/", "/**").permitAll()
-                )
-                .formLogin(cfg -> cfg
-                        .loginPage("/profile/login")
-                        .defaultSuccessUrl("/")
-                )
-                .csrf(AbstractHttpConfigurer::disable)
-                .build();
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
 }
