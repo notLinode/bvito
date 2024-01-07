@@ -1,5 +1,6 @@
 package ru.penzgtu.bvito.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,12 +41,12 @@ public class ItemController {
 
     @PostMapping("/item/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto itemDto) {
+    public ResponseEntity<ItemDto> createItem(@Valid @RequestBody ItemDto itemDto) {
         return new ResponseEntity<>(itemService.createItem(itemDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/item/{id}/update")
-    public ResponseEntity<ItemDto> updateItem(@RequestBody ItemDto itemDto, @PathVariable long id) {
+    public ResponseEntity<ItemDto> updateItem(@Valid @RequestBody ItemDto itemDto, @PathVariable long id) {
         return ResponseEntity.ok(itemService.updateItem(itemDto, id));
     }
 

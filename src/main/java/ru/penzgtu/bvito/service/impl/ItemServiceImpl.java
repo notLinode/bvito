@@ -7,10 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.penzgtu.bvito.dto.ItemDto;
 import ru.penzgtu.bvito.dto.ItemResponse;
-import ru.penzgtu.bvito.model.Customer;
 import ru.penzgtu.bvito.model.Item;
 import ru.penzgtu.bvito.model.ItemTag;
-import ru.penzgtu.bvito.repository.CustomerRepository;
 import ru.penzgtu.bvito.repository.ItemRepository;
 import ru.penzgtu.bvito.repository.ItemTagRepository;
 import ru.penzgtu.bvito.service.ItemService;
@@ -22,12 +20,10 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepo;
     private final ItemTagRepository tagRepo;
-    private final CustomerRepository customerRepo;
 
-    public ItemServiceImpl(ItemRepository itemRepo, ItemTagRepository tagRepo, CustomerRepository customerRepo) {
+    public ItemServiceImpl(ItemRepository itemRepo, ItemTagRepository tagRepo) {
         this.itemRepo = itemRepo;
         this.tagRepo = tagRepo;
-        this.customerRepo = customerRepo;
     }
 
     @Override
