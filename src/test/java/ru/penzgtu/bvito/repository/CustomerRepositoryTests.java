@@ -28,7 +28,7 @@ public class CustomerRepositoryTests {
     }
 
     @Test
-    public void CustomerRepository_FindByUsername_ReturnPresentOptionalWhenPresent() {
+    public void CustomerRepository_FindByUsername_ReturnCustomerIsPresent() {
         Customer customer = new Customer("root", "alpine", "1", "2", "3", "4", "5");
 
         repo.save(customer);
@@ -39,14 +39,26 @@ public class CustomerRepositoryTests {
     }
 
     @Test
-    public void CustomerRepository_FindByUsername_ReturnNotPresentOptionalWhenNotPresent() {
+    public void CustomerRepository_FindByUsername_ReturnCustomerIsEmptyWhenNotPresent() {
         Customer customer = new Customer("root", "alpine", "1", "2", "3", "4", "5");
 
         repo.save(customer);
 
         Optional<Customer> optionalCustomer = repo.findByUsername("admin");
 
-        Assertions.assertThat(optionalCustomer).isNotPresent();
+        Assertions.assertThat(optionalCustomer).isEmpty();
+    }
+
+    @Test
+    public void CustomerRepository_Delete_ReturnCustomerIsEmpty() {
+        Customer customer = new Customer("root", "alpine", "1", "2", "3", "4", "5");
+
+        repo.save(customer);
+
+        repo.delete(customer);
+        Optional<Customer> returnedCustomer = repo.findById(customer.getId());
+
+        Assertions.assertThat(returnedCustomer).isEmpty();
     }
 
 }

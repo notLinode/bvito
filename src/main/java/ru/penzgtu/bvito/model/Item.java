@@ -9,8 +9,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +41,8 @@ public class Item {
     private BigDecimal price;
 
     @ManyToMany
-    private List<ItemTag> tags;
+    @Builder.Default
+    private List<ItemTag> tags = new ArrayList<>();
 
     @ManyToOne
     private Customer listedBy;
