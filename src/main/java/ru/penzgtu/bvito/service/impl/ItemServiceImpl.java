@@ -65,14 +65,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto updateItem(ItemDto itemDto, long id) {
+    public ItemDto updateItem(ItemDto newItemDto, long id) {
         Item item = itemRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Pokemon could not be found"));
 
-        item.setCreatedAt(itemDto.getCreatedAt());
-        item.setName(itemDto.getName());
-        item.setDescription(itemDto.getDescription());
-        item.setPrice(itemDto.getPrice());
-        item.setTags(itemDto.getTags().stream().map(this::findOrCreateItemTag).toList());
+        item.setCreatedAt(newItemDto.getCreatedAt());
+        item.setName(newItemDto.getName());
+        item.setDescription(newItemDto.getDescription());
+        item.setPrice(newItemDto.getPrice());
+        item.setTags(newItemDto.getTags().stream().map(this::findOrCreateItemTag).toList());
 
         Item updatedItem = itemRepo.save(item);
 
