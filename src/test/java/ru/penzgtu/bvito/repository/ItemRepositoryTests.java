@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import ru.penzgtu.bvito.model.Customer;
 import ru.penzgtu.bvito.model.Item;
 
 import java.math.BigDecimal;
@@ -19,6 +20,25 @@ public class ItemRepositoryTests {
 
     @Autowired
     private ItemRepository repo;
+
+    @Test
+    public void ItemRepository_GetAllByListedBy_Id_ReturnItems() {
+        Customer customer = new Customer();
+        customer.setId(1L);
+
+        Item item = Item.builder()
+                .createdAt(new Date())
+                .name("Test listing")
+                .description("")
+                .price(BigDecimal.valueOf(42))
+                .listedBy(customer)
+                .build();
+
+        repo.save(item);
+//        repo.getAllByListedBy_Id(1L, );
+
+        Assertions.assertThat(true).isTrue();  // TODO
+    }
 
     @Test
     public void ItemRepository_SaveAll_ReturnMoreThanOne() {

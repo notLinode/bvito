@@ -67,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponse getAllItemsByCustomerId(int pageNum, int pageSize, Long customerId) {
         Pageable pageable = PageRequest.of(pageNum, pageSize);
-        Page<Item> items = itemRepo.getAllByListedBy_Id(customerId, pageable);
+        Page<Item> items = itemRepo.getAllByListedBy_Id(customerId, pageable).orElseThrow(() -> new EntityNotFoundException("Customer could not be found"));
         List<Item> itemList = items.getContent();
         List<ItemDto> content = itemList.stream().map(this::mapToDto).toList();
 

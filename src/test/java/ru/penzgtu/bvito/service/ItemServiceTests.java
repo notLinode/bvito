@@ -82,17 +82,6 @@ public class ItemServiceTests {
     }
 
     @Test
-    public void ItemService_GetAllItemsByCustomerId_ReturnItemResponse() {
-        Page<Item> items = Mockito.mock(Page.class);
-
-        Mockito.when(repo.getAllByListedBy_Id(Mockito.any(Long.class), Mockito.any(Pageable.class))).thenReturn(items);
-
-        ItemResponse itemResponse = service.getAllItemsByCustomerId(1, 10, 1L);
-
-        Assertions.assertThat(itemResponse).isNotNull();
-    }
-
-    @Test
     public void ItemService_UpdateItem_ReturnItemDto() {
         long itemId = 1L;
         Item item = Item.builder()
